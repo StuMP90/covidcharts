@@ -1,0 +1,26 @@
+{
+    "name": "stump90/covidcharts",
+    "description": "A module for the SilverStripe CMS which allows you to display covid tracking information via shortcodes.",
+    "homepage": "https://www.z-add.co.uk/",
+    "type": "silverstripe-vendormodule",
+    "keywords": [
+        "silverstripe",
+        "covid",
+        "history"
+    ],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Stuart Millington",
+            "email": "devel@dsv1.co.uk"
+        }
+    ],
+    "require": {
+        "silverstripe/cms": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+                "StuMP90\\CovidCharts\\": "src/"
+        }
+    }
+}

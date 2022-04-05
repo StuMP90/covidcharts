@@ -1,4 +1,4 @@
-# Quadratic Solver Page
+# Covid Graph Shortcode Module
 
 A module for the SilverStripe CMS which allows you to display covid tracking
 information via shortcodes.

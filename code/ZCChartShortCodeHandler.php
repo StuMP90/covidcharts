@@ -30,14 +30,10 @@ class ZCChartShortCodeHandler implements ShortcodeHandler
      * @return string
      */
     public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array()) {
-        // If there isn't a type, stop now
-        if (empty($arguments['type'])) {
-            return;
-        }
         
-        // If type is not in the allowed list, stop now
-        $allowed_types = array("england60", "usa60");
-        if (!(in_array($arguments['type'], $allowed_types, true))) {
+        // If type is blank or not in the allowed list, stop now
+        $allowed_types = array("england90", "usa90","england60", "usa60","england30", "usa30");
+        if ((empty($arguments['type'])) || (!(in_array($arguments['type'], $allowed_types, true)))) {
             return;
         }
 
@@ -78,11 +74,23 @@ class ZCChartShortCodeHandler implements ShortcodeHandler
         
         // Get the data
         switch ($arguments['type']) {
+            case 'england90':
+                $case_data = \StuMP90\CovidCharts\ZCChartShortCodeHandler::getUKData("england",90);
+                break;
             case 'england60':
-                $case_data = \StuMP90\CovidCharts\ZCChartShortCodeHandler::getUKData("england");
+                $case_data = \StuMP90\CovidCharts\ZCChartShortCodeHandler::getUKData("england",60);
+                break;
+            case 'england30':
+                $case_data = \StuMP90\CovidCharts\ZCChartShortCodeHandler::getUKData("england",30);
+                break;
+            case 'usa90':
+                $case_data = \StuMP90\CovidCharts\ZCChartShortCodeHandler::getUSAData("usa",90);
                 break;
             case 'usa60':
-                $case_data = \StuMP90\CovidCharts\ZCChartShortCodeHandler::getUSAData("usa");  // TEMP
+                $case_data = \StuMP90\CovidCharts\ZCChartShortCodeHandler::getUSAData("usa",60);
+                break;
+            case 'usa30':
+                $case_data = \StuMP90\CovidCharts\ZCChartShortCodeHandler::getUSAData("usa",30);
                 break;
         }
         if (isset($case_data)) {
@@ -103,10 +111,11 @@ class ZCChartShortCodeHandler implements ShortcodeHandler
      * Get historic data from the UK Government API
      * 
      * @param string $region
+     * @param int $days
      *
      * @return arraylist
      */
-    public static function getUKData(string $region) {
+    public static function getUKData(string $region, int $days = 30) {
         $list = ArrayList::create();
 
         if ($region = "england") {
@@ -182,7 +191,7 @@ class ZCChartShortCodeHandler implements ShortcodeHandler
             // Sort the array on the record's timestamp in reverse order, with
             // the most recent first
             arsort($combarr);
-            $latest = array_slice($combarr, 0, 69);   // Get the latest 66 records (60 + 6 days for 7 day averages + 3 days for incomplete latest data)
+            $latest = array_slice($combarr, 0, ($days + 9));   // Get the latest 66 records (60 + 6 days for 7 day averages + 3 days for incomplete latest data)
             
             // Reverse the sequence for display
             asort($latest);
@@ -254,10 +263,11 @@ class ZCChartShortCodeHandler implements ShortcodeHandler
      * Get historic data from the UK Government API
      * 
      * @param string $region
+     * @param int $days
      *
      * @return arraylist
      */
-    public static function getUSAData(string $region) {
+    public static function getUSAData(string $region, int $days = 60) {
         $list = ArrayList::create();
 
         if ($region = "usa") {
@@ -337,7 +347,7 @@ class ZCChartShortCodeHandler implements ShortcodeHandler
             // Sort the array on the record's timestamp in reverse order, with
             // the most recent first
             arsort($combarr);
-            $latest = array_slice($combarr, 0, 69);   // Get the latest 66 records (60 + 6 days for 7 day averages + 3 days for incomplete latest data)
+            $latest = array_slice($combarr, 0, ($days + 9));   // Get the latest 66 records (60 + 6 days for 7 day averages + 3 days for incomplete latest data)
             
             // Reverse the sequence for display
             asort($latest);
